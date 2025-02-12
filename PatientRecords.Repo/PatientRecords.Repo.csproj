@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PatientRecords.AppService\PatientRecords.AppService.csproj" />
     <ProjectReference Include="..\PatientRecords.Core\PatientRecords.Core.csproj" />
   </ItemGroup>
 
