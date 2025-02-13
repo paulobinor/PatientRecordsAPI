@@ -19,8 +19,8 @@ namespace PatientRecords.Repo.SQLite
 
         public async Task<Patient> AddNewPatient(Patient patient)
         {
-           var newPatientTracking = await _dbContext.Patients.AddAsync(patient);
-           var result = await _dbContext.SaveChangesAsync();
+            var newPatientTracking = await _dbContext.Patients.AddAsync(patient);
+            var result = await _dbContext.SaveChangesAsync();
             if (result > 0)
             {
                 return newPatientTracking.Entity;
@@ -39,19 +39,34 @@ namespace PatientRecords.Repo.SQLite
             return null;
         }
 
-        public async Task<List<Patient>> GetPatientList()
+        public async Task<List<Patient>> GetPatientList(string firstName, string lastName)
         {
-            return _dbContext.Patients.Where(x => !x.IsDeleted).ToList();
-        }
+            try
+            {
+                return _dbContext.Patients.Where(x => x.IsDeleted == 0 && x.FirstName.Contains(firstName, StringComparison.OrdinalIgnoreCase) || x.Surname.Contains(lastName, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+            catch (Exception)
+            {
 
-        public async Task<List<Patient>> GetPatientVitals(string PatientId)
+                throw;
+            }
+        }
+        public async Task<Patient> GetPatient(string Id)
         {
-            return _dbContext.Patients.Where(x => !x.IsDeleted).ToList();
+            try
+            {
+                var existingPatient = await _dbContext.Patients.SingleOrDefaultAsync(x => x.PatientId == new Guid(Id));
+                return existingPatient;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
-
+     
         public async Task<VitalSign> AddPatientVitals(VitalSign vitalSign)
         {
-            var newPatientTracking = await _dbContext.vitalSigns.AddAsync(vitalSign);
+            var newPatientTracking = await _dbContext.VitalSigns.AddAsync(vitalSign);
             var result = await _dbContext.SaveChangesAsync();
             if (result > 0)
             {
@@ -60,9 +75,21 @@ namespace PatientRecords.Repo.SQLite
             return null;
         }
 
+        public async Task<List<VitalSign>> GetPatientVitals(DateTime startDate, DateTime endDate, string PatientId)
+        {
+            try
+            {
+                return await _dbContext.VitalSigns.Where(x => x.RecordDate >= startDate && x.RecordDate <= endDate && x.PatientId == new Guid(PatientId)).ToListAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<VitalSign> UpdatePatientVitals(VitalSign updateVitalSign)
         {
-            var updatePatientTracking = _dbContext.vitalSigns.Update(updateVitalSign);
+            var updatePatientTracking = _dbContext.VitalSigns.Update(updateVitalSign);
             var result = await _dbContext.SaveChangesAsync();
             if (result > 0)
             {
@@ -70,27 +97,81 @@ namespace PatientRecords.Repo.SQLite
             }
             return null;
         }
-
+  
         public async Task<Consultation> AddConsultation(Consultation consultation)
         {
-            var newconsultationTracking = await _dbContext.Consultations.AddAsync(consultation);
-            var result = await _dbContext.SaveChangesAsync();
-            if (result > 0)
+            try
             {
-                return newconsultationTracking.Entity;
+                var newconsultationTracking = await _dbContext.Consultations.AddAsync(consultation);
+                var result = await _dbContext.SaveChangesAsync();
+                if (result > 0)
+                {
+                    return newconsultationTracking.Entity;
+                }
+                return null;
             }
-            return null;
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<Consultation> UpdateConsultation(Consultation consultation)
         {
-            var consultationTracking = _dbContext.Consultations.Update(consultation);
-            var result = await _dbContext.SaveChangesAsync();
-            if (result > 0)
+            try
             {
-                return consultationTracking.Entity;
+                var consultationTracking = _dbContext.Consultations.Update(consultation);
+                var result = await _dbContext.SaveChangesAsync();
+                if (result > 0)
+                {
+                    return consultationTracking.Entity;
+                }
+                return null;
             }
-            return null;
+            catch (Exception)
+            {
+                throw;
+            }
+            
+        }
+
+        public async Task<Consultation> GetConsultation(string id)
+        {
+            try
+            {
+                return await _dbContext.Consultations.SingleOrDefaultAsync(x => x.ConsultationId == new Guid(id));
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<Consultation>> GetConsultations(DateTime startDate, DateTime endDate, string id)
+        {
+            try
+            {
+                var result = await  _dbContext.Consultations.Where(x => x.Date >= startDate.Date && x.Date <= endDate.Date && x.PatientId == new Guid(id)).ToListAsync();
+                
+                return result;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<VitalSign> GetSingleVitals(string Id)
+        {
+            try
+            {
+                return  await _dbContext.VitalSigns.SingleOrDefaultAsync(x => x.VitalSignsId == new Guid(Id));
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
         }
     }
 }

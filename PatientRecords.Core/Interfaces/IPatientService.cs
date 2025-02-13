@@ -11,13 +11,19 @@ namespace PatientRecords.Core.Interfaces
     {
         Task<Patient> CreatePatient(Patient patient);
         Task<Patient> UpdatePatient(Patient patient);
-        Task<Patient> CreateVitals(VitalSign patient);
-        Task<Patient> UpdateVitals(Patient patient);
-        Task<Patient> PatientList();
-        Task<Patient> CreateConsultation(Consultation newConsultation);
-        Task<Patient> UpdateConsultation(Consultation updateConsultation);
-        Task<Patient> GetSinglePatient(Patient patient);
-        Task<Patient> GetConsultation(Patient patient);
-        Task<List<VitalSign>> GetVitals(string patientId);
+        Task<Patient> PatientList(string firstname, string lastname);
+        Task<Patient> GetSinglePatient(string patient);
+
+
+        Task<VitalSign> CreateVitals(VitalSign vitalSign);
+        Task<VitalSign> UpdateVitals(VitalSign patient);
+        Task<List<VitalSign>> GetPatientVitals(DateTime startDate, DateTime endDate, string PatientId);
+        Task<VitalSign> GetSingleVitals(string id);
+
+
+        Task<Consultation> CreateConsultation(Consultation newConsultation);
+        Task<Consultation> UpdateConsultation(Consultation updateConsultation);
+        Task<List<Consultation>> GetConsultations(DateTime startDate, DateTime endDate, string Id);
+        Task<Consultation> GetConsultation(string Id);
     }
 }

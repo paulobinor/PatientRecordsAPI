@@ -1,42 +1,26 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PatientRecords.Core.models;
+using System;
 
 namespace PatientRecords.Repo
 {
     public class SQLiteDbContext : DbContext
     {
-        public SQLiteDbContext(DbContextOptions<SQLiteDbContext> options) : base(options) { }
-
         public DbSet<Patient> Patients { get; set; }
-        public DbSet<Medication> Medications { get; set; }
         public DbSet<Consultation> Consultations { get; set; }
+        public DbSet<Medication> Medications { get; set; }
         public DbSet<Prescription> Prescriptions { get; set; }
-        public DbSet<VitalSign> vitalSigns { get; set; }
+        public DbSet<VitalSign> VitalSigns { get; set; }
+
+        public SQLiteDbContext(DbContextOptions<SQLiteDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Patient>()
-                .HasMany(p => p.VitalSigns)
-                .WithOne(r => r.Patient)
-                .HasForeignKey(r => r.PatientId);
-
-
-            modelBuilder.Entity<Patient>()
-                .HasMany(p => p.Consultations)
-                .WithOne(r => r.Patient)
-                .HasForeignKey(r => r.PatientId);
-
-
-            modelBuilder.Entity<Patient>()
-                .HasMany(p => p.Prescriptions)
-                .WithOne(r => r.Patient)
-                .HasForeignKey(r => r.PatientId);
-
-
-            modelBuilder.Entity<Patient>()
-                .HasMany(p => p.Medications)
-                .WithOne(r => r.Patient)
-                .HasForeignKey(r => r.PatientId);
+            // Seed Sample Data
+            modelBuilder.Entity<Patient>().HasData(
+                new Patient { PatientId = Guid.NewGuid(), FirstName = "John", Surname = "Doe", DateOfBirth = new DateTime(1990, 5, 10), Gender = "M", IsDeleted = 0 },
+                new Patient { PatientId = Guid.NewGuid(), FirstName = "Alice", Surname = "Smith", DateOfBirth = new DateTime(1985, 7, 20), Gender = "F", IsDeleted = 0 }
+            );
         }
     }
 }

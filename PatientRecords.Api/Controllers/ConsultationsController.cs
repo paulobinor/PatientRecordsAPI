@@ -1,29 +1,27 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using PatientRecords.AppService.models;
 using PatientRecords.Core.Interfaces;
-using System.Diagnostics.Tracing;
 
 namespace PatientRecords.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class PatientsController : ControllerBase
+    public class ConsultationsController : ControllerBase
     {
         
-        private readonly ILogger<PatientsController> _logger;
+        private readonly ILogger<ConsultationsController> _logger;
         private readonly IPatientService _patientService;
 
-        public PatientsController(ILogger<PatientsController> logger, IPatientService patientService)
+        public ConsultationsController(ILogger<ConsultationsController> logger, IPatientService patientService)
         {
             _logger = logger;
             _patientService = patientService;
         }
 
         [HttpGet(Name = "List")]
-        public async Task<IActionResult> GetPatientList([FromQuery] string FirstName, [FromQuery] string LastName)
+        public async Task<IActionResult> GetConsultations([FromQuery] string startDate, string endDate, [FromQuery] string Id)
         {
-            var searchResult = _patientService.PatientList(FirstName, LastName);
+            var searchResult =  await _patientService.GetConsultations(Convert.ToDateTime(startDate), Convert.ToDateTime(endDate), Id);
             var errors = new
             {
                 ResponseCode = "00",
@@ -34,7 +32,7 @@ namespace PatientRecords.Api.Controllers
         }
 
         [HttpPost(Name = "create")]
-        public async Task<IActionResult> AddNewPatient(PatientRecords.Core.models.Patient patient)
+        public async Task<IActionResult> AddNewConsultation(PatientRecords.Core.models.Consultation consultation)
         {
             if (!ModelState.IsValid)
             {
@@ -42,11 +40,11 @@ namespace PatientRecords.Api.Controllers
                 {
                     ResponseCode = "01",
                     ResponseDescription = "Falidation failed",
-                        Data = string.Join("|", ModelState.Values.SelectMany(x => x.Errors))
+                    Data = string.Join("|", ModelState.Values.SelectMany(x => x.Errors))
                 };
                 return BadRequest(errors);
             }
-            var newPatient = _patientService.CreatePatient(patient);
+            var newPatient = _patientService.CreateConsultation(consultation);
             if (newPatient == null)
             {
                 var errors = new
@@ -60,7 +58,7 @@ namespace PatientRecords.Api.Controllers
         }
 
         [HttpPost(Name = "update")]
-        public async Task<IActionResult> UpdatePatient(PatientRecords.Core.models.Patient patient)
+        public async Task<IActionResult> UpdateConsultation(PatientRecords.Core.models.Consultation consultation)
         {
             if (!ModelState.IsValid)
             {
@@ -72,34 +70,7 @@ namespace PatientRecords.Api.Controllers
                 };
                 return BadRequest(errors);
             }
-            var newPatient = _patientService.UpdatePatient(patient);
-            if (newPatient == null)
-            {
-                var errors = new
-                {
-                    ResponseCode = "96",
-                    ResponseDescription = "We encountered an error. Please try again later or contact support"
-                };
-                return StatusCode(500, errors);
-            }
-            return Ok(newPatient);
-        }
-
-        [HttpPost(Name = "Delete")]
-        public async Task<IActionResult> DeletePatient(PatientRecords.Core.models.Patient patient)
-        {
-            if (!ModelState.IsValid)
-            {
-                var errors = new
-                {
-                    ResponseCode = "01",
-                    ResponseDescription = "Falidation failed",
-                    Data = string.Join("|", ModelState.Values.SelectMany(x => x.Errors))
-                };
-                return BadRequest(errors);
-            }
-            patient.IsDeleted = 1;
-            var res = _patientService.UpdatePatient(patient);
+            var res = _patientService.UpdateConsultation(consultation);
             if (res == null)
             {
                 var errors = new
@@ -112,13 +83,47 @@ namespace PatientRecords.Api.Controllers
             var data = new
             {
                 ResponseCode = "00",
-                ResponseDescription = "We encountered an error. Please try again later or contact support"
+                ResponseDescription = "Success",
+                Date = res
+            };
+            return Ok(data);
+        }
+
+        [HttpPost(Name = "Delete")]
+        public async Task<IActionResult> DeleteConsultation(PatientRecords.Core.models.Consultation consultation)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = new
+                {
+                    ResponseCode = "01",
+                    ResponseDescription = "Falidation failed",
+                    Data = string.Join("|", ModelState.Values.SelectMany(x => x.Errors))
+                };
+                return BadRequest(errors);
+            }
+            consultation.IsDeleted = 1;
+            var res = _patientService.UpdateConsultation(consultation);
+            if (res == null)
+            {
+                var errors = new
+                {
+                    ResponseCode = "96",
+                    ResponseDescription = "We encountered an error. Please try again later or contact support"
+                };
+                return StatusCode(500, errors);
+            }
+            var data = new
+            {
+                ResponseCode = "00",
+                ResponseDescription = "Success",
+                Date = res
             };
             return Ok(data);
         }
 
         [HttpPost("Get/{id}")]
-        public async Task<IActionResult> GetSinglePatient([FromRoute] string Id)
+        public async Task<IActionResult> GetSingleConsultation([FromRoute] string Id)
         {
             if (string.IsNullOrEmpty(Id))
             {
@@ -129,7 +134,7 @@ namespace PatientRecords.Api.Controllers
                 };
                 return BadRequest(errors);
             }
-            var res = _patientService.GetSinglePatient(Id);
+            var res = _patientService.GetConsultation(Id);
             if (res == null)
             {
                 var errors = new
