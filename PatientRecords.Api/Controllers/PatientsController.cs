@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.OpenApi.Services;
 using PatientRecords.AppService.models;
 using PatientRecords.Core.Interfaces;
 using System.Diagnostics.Tracing;
@@ -24,13 +25,13 @@ namespace PatientRecords.Api.Controllers
         public async Task<IActionResult> GetPatientList([FromQuery] string FirstName = null, [FromQuery] string LastName = null)
         {
             var searchResult = await _patientService.PatientList(FirstName, LastName);
-            var data = new
-            {
-                ResponseCode = "00",
-                ResponseDescription = "Success",
-                Data = searchResult
-            };
-            return Ok(data);
+            //var data = new
+            //{
+            //    ResponseCode = "00",
+            //    ResponseDescription = "Success",
+            //    Data = searchResult
+            //};
+            return Ok(searchResult);
         }
 
         [HttpPost("create")]
@@ -46,7 +47,7 @@ namespace PatientRecords.Api.Controllers
                 };
                 return BadRequest(errors);
             }
-            var newPatient = _patientService.CreatePatient(createPatientDto);
+            var newPatient = await _patientService.CreatePatient(createPatientDto);
             if (newPatient == null)
             {
                 var errors = new
@@ -56,7 +57,13 @@ namespace PatientRecords.Api.Controllers
                 };
                 return StatusCode(500, errors);
             }
-            return Ok(newPatient);
+            var data = new
+            {
+                ResponseCode = "00",
+                ResponseDescription = "Success",
+                Data = newPatient
+            };
+            return Ok(data);
         }
 
         [HttpPost("update")]
@@ -72,8 +79,8 @@ namespace PatientRecords.Api.Controllers
                 };
                 return BadRequest(errors);
             }
-            var newPatient = _patientService.UpdatePatient(patient);
-            if (newPatient == null)
+            var updatePatient = await _patientService.UpdatePatient(patient);
+            if (updatePatient == null)
             {
                 var errors = new
                 {
@@ -82,7 +89,13 @@ namespace PatientRecords.Api.Controllers
                 };
                 return StatusCode(500, errors);
             }
-            return Ok(newPatient);
+            var data = new
+            {
+                ResponseCode = "00",
+                ResponseDescription = "Success",
+                Data = updatePatient
+            };
+            return Ok(data);
         }
 
         [HttpPost("Delete")]
@@ -112,7 +125,7 @@ namespace PatientRecords.Api.Controllers
             var data = new
             {
                 ResponseCode = "00",
-                ResponseDescription = "We encountered an error. Please try again later or contact support"
+                ResponseDescription = "Success"
             };
             return Ok(data);
         }

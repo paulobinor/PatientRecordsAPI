@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35707.178 d17.12
+VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientRecords.Api", "PatientRecords.Api\PatientRecords.Api.csproj", "{34241D72-A2B6-4329-ABDF-B55711409BAB}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientRecords.AppService", "PatientRecords.AppService\PatientRecords.AppService.csproj", "{B908C88E-384A-4CCD-80C3-50A7BC5A99A1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientRecords.Repo", "PatientRecords.Repo\PatientRecords.Repo.csproj", "{96995D73-5D5B-4671-98FB-AF9DE444C3C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientRecords.Tests", "PatientRecords.Tests\PatientRecords.Tests.csproj", "{AA92DC23-4BE7-4DD8-A2E6-51A6BE9C7634}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{96995D73-5D5B-4671-98FB-AF9DE444C3C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96995D73-5D5B-4671-98FB-AF9DE444C3C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96995D73-5D5B-4671-98FB-AF9DE444C3C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA92DC23-4BE7-4DD8-A2E6-51A6BE9C7634}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA92DC23-4BE7-4DD8-A2E6-51A6BE9C7634}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA92DC23-4BE7-4DD8-A2E6-51A6BE9C7634}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA92DC23-4BE7-4DD8-A2E6-51A6BE9C7634}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

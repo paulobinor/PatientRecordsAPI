@@ -44,7 +44,7 @@ namespace PatientRecords.Api.Controllers
                 };
                 return BadRequest(errors);
             }
-            var res = _patientService.CreateVitals(createVitalSignDto);
+            var res = await _patientService.CreateVitals(createVitalSignDto);
             if (res == null)
             {
                 var errors = new
@@ -76,7 +76,7 @@ namespace PatientRecords.Api.Controllers
                 };
                 return BadRequest(errors);
             }
-            var res = _patientService.UpdateVitals(vitalSignDto);
+            var res = await _patientService.UpdateVitals(vitalSignDto);
             if (res == null)
             {
                 var errors = new
@@ -109,7 +109,7 @@ namespace PatientRecords.Api.Controllers
                 return BadRequest(errors);
             }
             vitalSignDto.IsDeleted = 1;
-            var res = _patientService.UpdateVitals(vitalSignDto);
+            var res = await _patientService.UpdateVitals(vitalSignDto);
             if (res == null)
             {
                 var errors = new

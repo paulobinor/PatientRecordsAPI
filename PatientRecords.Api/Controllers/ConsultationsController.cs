@@ -44,7 +44,7 @@ namespace PatientRecords.Api.Controllers
                 };
                 return BadRequest(errors);
             }
-            var newPatient = _patientService.CreateConsultation(consultation);
+            var newPatient = await _patientService.CreateConsultation(consultation);
             if (newPatient == null)
             {
                 var errors = new
@@ -70,7 +70,7 @@ namespace PatientRecords.Api.Controllers
                 };
                 return BadRequest(errors);
             }
-            var res = _patientService.UpdateConsultation(consultation);
+            var res = await _patientService.UpdateConsultation(consultation);
             if (res == null)
             {
                 var errors = new
@@ -103,7 +103,7 @@ namespace PatientRecords.Api.Controllers
                 return BadRequest(errors);
             }
             consultation.IsDeleted = 1;
-            var res = _patientService.UpdateConsultation(consultation);
+            var res = await _patientService.UpdateConsultation(consultation);
             if (res == null)
             {
                 var errors = new
@@ -134,7 +134,7 @@ namespace PatientRecords.Api.Controllers
                 };
                 return BadRequest(errors);
             }
-            var res = _patientService.GetConsultation(Id);
+            var res = await _patientService.GetConsultation(Id);
             if (res == null)
             {
                 var errors = new

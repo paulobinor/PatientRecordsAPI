@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using PatientRecords.Core.models;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace PatientRecords.Core.Dtos
@@ -11,6 +12,8 @@ namespace PatientRecords.Core.Dtos
         public DateTime DateOfBirth { get; set; }
         public string Gender { get; set; }
         public byte IsDeleted { get; set; } = 0;
+        public List<Consultation> Consultations { get; set; }
+        public List<VitalSignDto> VitalSigns { get; set; }
     }
 
     public class UpdatePatientDto

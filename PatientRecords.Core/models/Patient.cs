@@ -14,5 +14,6 @@ namespace PatientRecords.Core.models
         public byte IsDeleted { get; set; } = 0;
         public List<Consultation> Consultations { get; set; } = new();
         public List<Medication> Medications { get; set; } = new();
+        public List<VitalSign> VitalSigns { get; set; } = new();
     }
 }
