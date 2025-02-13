@@ -43,7 +43,7 @@ namespace PatientRecords.Repo.SQLite
         {
             try
             {
-                return _dbContext.Patients.Where(x => x.IsDeleted == 0 && x.FirstName.Contains(firstName, StringComparison.OrdinalIgnoreCase) || x.Surname.Contains(lastName, StringComparison.OrdinalIgnoreCase)).ToList();
+                return _dbContext.Patients.Where(x => x.IsDeleted == 0 && x.FirstName == firstName || x.Surname == lastName).ToList();
             }
             catch (Exception)
             {

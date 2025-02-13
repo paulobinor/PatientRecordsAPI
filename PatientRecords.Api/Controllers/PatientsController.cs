@@ -20,21 +20,21 @@ namespace PatientRecords.Api.Controllers
             _patientService = patientService;
         }
 
-        [HttpGet(Name = "List")]
-        public async Task<IActionResult> GetPatientList([FromQuery] string FirstName, [FromQuery] string LastName)
+        [HttpGet("List")]
+        public async Task<IActionResult> GetPatientList([FromQuery] string FirstName = null, [FromQuery] string LastName = null)
         {
-            var searchResult = _patientService.PatientList(FirstName, LastName);
-            var errors = new
+            var searchResult = await _patientService.PatientList(FirstName, LastName);
+            var data = new
             {
                 ResponseCode = "00",
                 ResponseDescription = "Success",
                 Data = searchResult
             };
-            return Ok();
+            return Ok(data);
         }
 
-        [HttpPost(Name = "create")]
-        public async Task<IActionResult> AddNewPatient(PatientRecords.Core.models.Patient patient)
+        [HttpPost("create")]
+        public async Task<IActionResult> AddNewPatient(PatientRecords.Core.Dtos.CreatePatientDto createPatientDto)
         {
             if (!ModelState.IsValid)
             {
@@ -46,7 +46,7 @@ namespace PatientRecords.Api.Controllers
                 };
                 return BadRequest(errors);
             }
-            var newPatient = _patientService.CreatePatient(patient);
+            var newPatient = _patientService.CreatePatient(createPatientDto);
             if (newPatient == null)
             {
                 var errors = new
@@ -59,8 +59,8 @@ namespace PatientRecords.Api.Controllers
             return Ok(newPatient);
         }
 
-        [HttpPost(Name = "update")]
-        public async Task<IActionResult> UpdatePatient(PatientRecords.Core.models.Patient patient)
+        [HttpPost("update")]
+        public async Task<IActionResult> UpdatePatient(PatientRecords.Core.Dtos.PatientDto patient)
         {
             if (!ModelState.IsValid)
             {
@@ -85,8 +85,8 @@ namespace PatientRecords.Api.Controllers
             return Ok(newPatient);
         }
 
-        [HttpPost(Name = "Delete")]
-        public async Task<IActionResult> DeletePatient(PatientRecords.Core.models.Patient patient)
+        [HttpPost("Delete")]
+        public async Task<IActionResult> DeletePatient(PatientRecords.Core.Dtos.PatientDto patient)
         {
             if (!ModelState.IsValid)
             {

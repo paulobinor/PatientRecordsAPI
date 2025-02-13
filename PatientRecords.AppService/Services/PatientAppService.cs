@@ -1,4 +1,6 @@
-﻿using PatientRecords.AppService.Interfaces;
+﻿using AutoMapper;
+using PatientRecords.AppService.Interfaces;
+using PatientRecords.Core.Dtos;
 using PatientRecords.Core.Interfaces;
 using PatientRecords.Core.models;
 using System;
@@ -12,123 +14,132 @@ namespace PatientRecords.AppService.Services
     public class PatientAppService : IPatientService
     {
         private readonly IPatientDbRepo _patientDbRepo;
+        private readonly IMapper _mapper;
         public PatientAppService(IPatientDbRepo patientDbRepo)
         {
             _patientDbRepo = patientDbRepo;
+            _mapper = MappingConfig.RegisterMaps().CreateMapper();
         }
 
-        public async Task<Patient> CreatePatient(Patient patient)
+        public async Task<PatientDto> CreatePatient(CreatePatientDto createPatientDto)
         {
+            var patient = _mapper.Map<Patient>(createPatientDto);
             var resp = await _patientDbRepo.AddNewPatient(patient);
             if (resp != null)
             {
-                return resp;
+                return _mapper.Map<PatientDto>(resp);
             }
             return null;
         }
 
-        public async Task<Patient> UpdatePatient(Patient patient)
+        public async Task<PatientDto> UpdatePatient(PatientDto patientDto)
         {
+            var patient = _mapper.Map<Patient>(patientDto);
             var resp = await _patientDbRepo.UpdateExistingPatient(patient);
             if (resp != null)
             {
-                return resp;
+                return _mapper.Map<PatientDto>(resp);
             }
             return null;
         }
-        public async Task<Patient> PatientList(string firstname, string lastname)
+        public async Task<List<PatientDto>> PatientList(string firstname, string lastname)
         {
             var resp = await _patientDbRepo.GetPatientList(firstname, lastname);
             if (resp != null)
             {
-                return resp;
+                return _mapper.Map<List<PatientDto>>(resp);
             }
             return null;
         }
 
 
-        public async Task<Consultation> CreateConsultation(Consultation newConsultation)
+        public async Task<ConsultationDto> CreateConsultation(CreateConsultationDto createConsultation)
         {
+            var newConsultation = _mapper.Map<Consultation>(createConsultation);
             var resp = await _patientDbRepo.AddConsultation(newConsultation);
             if (resp != null)
             {
-                return resp;
+                return _mapper.Map<ConsultationDto>(resp);
             }
             return null;
         }
 
-        public async Task<List<Consultation>> GetConsultations(DateTime startDate, DateTime endDate, string Id)
+        public async Task<List<ConsultationDto>> GetConsultations(DateTime startDate, DateTime endDate, string Id)
         {
             var resp = await _patientDbRepo.GetConsultations(startDate, endDate, Id);
             if (resp != null)
             {
-                return resp;
+                return _mapper.Map<List<ConsultationDto>>(resp);
             }
             return null;
         }
 
-        public async Task<Consultation> UpdateConsultation(Consultation updateConsultation)
+        public async Task<ConsultationDto> UpdateConsultation(ConsultationDto consultationDto)
         {
+            var updateConsultation = _mapper.Map<Consultation>(consultationDto);
             var resp = await _patientDbRepo.UpdateConsultation(updateConsultation);
             if (resp != null)
             {
-                return resp;
+                return _mapper.Map<ConsultationDto>(resp);
             }
             return null;
         }
 
-        public async Task<Consultation> GetConsultation(string Id)
+        public async Task<ConsultationDto> GetConsultation(string Id)
         {
-            return await _patientDbRepo.GetConsultation(Id);
+            var resp = await _patientDbRepo.GetConsultation(Id);
+            return _mapper.Map<ConsultationDto>(resp);
         }
 
-        public async Task<Patient> GetSinglePatient(string Id)
+        public async Task<PatientDto> GetSinglePatient(string Id)
         {
             var resp = await _patientDbRepo.GetPatient(Id);
             if (resp != null)
             {
-                return resp;
+                return _mapper.Map<PatientDto>(resp);
             }
             return null;
         }
 
-        public async Task<VitalSign> CreateVitals(VitalSign vitalSign)
+        public async Task<VitalSignDto> CreateVitals(CreateVitalSignDto createVitalSignDto)
         {
+            var vitalSign = _mapper.Map<VitalSign>(createVitalSignDto);
             var resp = await _patientDbRepo.AddPatientVitals(vitalSign);
             if (resp != null)
             {
-                return resp;
+                return _mapper.Map<VitalSignDto>(resp);
             }
             return null;
         }
 
 
-        public async Task<List<VitalSign>> GetPatientVitals(DateTime startDate, DateTime endDate, string PatientId)
+        public async Task<List<VitalSignDto>> GetPatientVitals(DateTime startDate, DateTime endDate, string PatientId)
         {
             var resp = await _patientDbRepo.GetPatientVitals(startDate, endDate, PatientId);
             if (resp != null)
             {
-                return resp;
+                return _mapper.Map<List<VitalSignDto>>(resp);
             }
             return null;
         }
 
-        public async Task<VitalSign> UpdateVitals(VitalSign vitalSign)
+        public async Task<VitalSignDto> UpdateVitals(VitalSignDto vitalSignDto)
         {
+            var vitalSign = _mapper.Map<VitalSign>(vitalSignDto);
             var resp = await _patientDbRepo.UpdatePatientVitals(vitalSign);
             if (resp != null)
             {
-                return resp;
+                return _mapper.Map<VitalSignDto>(resp);
             }
             return null;
         }
 
-        public async Task<VitalSign> GetSingleVitals(string id)
+        public async Task<VitalSignDto> GetSingleVitals(string id)
         {
             var resp = await _patientDbRepo.GetSingleVitals(id);
             if (resp != null)
             {
-                return resp;
+                return _mapper.Map<VitalSignDto>(resp);
             }
             return null;
         }

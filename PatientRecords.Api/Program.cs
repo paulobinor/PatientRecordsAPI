@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using PatientRecords.AppService.Interfaces;
+using PatientRecords.AppService.Services;
+using PatientRecords.Core.Interfaces;
 using PatientRecords.Repo;
+using PatientRecords.Repo.SQLite;
 using System;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(); 
+builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IPatientService, PatientAppService>();
+builder.Services.AddScoped<IPatientDbRepo, SQLiteDBRepo>();
 builder.Services.AddDbContext<SQLiteDbContext>(opt => opt.UseSqlite("Data Source=patients.db"));
 
 

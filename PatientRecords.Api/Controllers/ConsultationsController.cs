@@ -18,7 +18,7 @@ namespace PatientRecords.Api.Controllers
             _patientService = patientService;
         }
 
-        [HttpGet(Name = "List")]
+        [HttpGet("List")]
         public async Task<IActionResult> GetConsultations([FromQuery] string startDate, string endDate, [FromQuery] string Id)
         {
             var searchResult =  await _patientService.GetConsultations(Convert.ToDateTime(startDate), Convert.ToDateTime(endDate), Id);
@@ -31,8 +31,8 @@ namespace PatientRecords.Api.Controllers
             return Ok();
         }
 
-        [HttpPost(Name = "create")]
-        public async Task<IActionResult> AddNewConsultation(PatientRecords.Core.models.Consultation consultation)
+        [HttpPost("create")]
+        public async Task<IActionResult> AddNewConsultation(PatientRecords.Core.Dtos.CreateConsultationDto consultation)
         {
             if (!ModelState.IsValid)
             {
@@ -57,8 +57,8 @@ namespace PatientRecords.Api.Controllers
             return Ok(newPatient);
         }
 
-        [HttpPost(Name = "update")]
-        public async Task<IActionResult> UpdateConsultation(PatientRecords.Core.models.Consultation consultation)
+        [HttpPost("update")]
+        public async Task<IActionResult> UpdateConsultation(PatientRecords.Core.Dtos.ConsultationDto consultation)
         {
             if (!ModelState.IsValid)
             {
@@ -89,8 +89,8 @@ namespace PatientRecords.Api.Controllers
             return Ok(data);
         }
 
-        [HttpPost(Name = "Delete")]
-        public async Task<IActionResult> DeleteConsultation(PatientRecords.Core.models.Consultation consultation)
+        [HttpPost("Delete")]
+        public async Task<IActionResult> DeleteConsultation(PatientRecords.Core.Dtos.ConsultationDto consultation)
         {
             if (!ModelState.IsValid)
             {
@@ -122,7 +122,7 @@ namespace PatientRecords.Api.Controllers
             return Ok(data);
         }
 
-        [HttpPost("Get/{id}")]
+        [HttpGet("Get/{id}")]
         public async Task<IActionResult> GetSingleConsultation([FromRoute] string Id)
         {
             if (string.IsNullOrEmpty(Id))

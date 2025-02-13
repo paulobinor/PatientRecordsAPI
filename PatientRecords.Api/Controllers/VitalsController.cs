@@ -18,7 +18,7 @@ namespace PatientRecords.Api.Controllers
             _patientService = patientService;
         }
 
-        [HttpGet(Name = "List")]
+        [HttpGet("List")]
         public async Task<IActionResult> GetVitals([FromQuery] string startDate, string endDate, [FromQuery] string Id)
         {
             var searchResult =  await _patientService.GetPatientVitals(Convert.ToDateTime(startDate), Convert.ToDateTime(endDate), Id);
@@ -31,8 +31,8 @@ namespace PatientRecords.Api.Controllers
             return Ok();
         }
 
-        [HttpPost(Name = "create")]
-        public async Task<IActionResult> AddNewVitals(PatientRecords.Core.models.VitalSign vitalSign)
+        [HttpPost("create")]
+        public async Task<IActionResult> AddNewVitals(PatientRecords.Core.Dtos.CreateVitalSignDto createVitalSignDto)
         {
             if (!ModelState.IsValid)
             {
@@ -44,7 +44,7 @@ namespace PatientRecords.Api.Controllers
                 };
                 return BadRequest(errors);
             }
-            var res = _patientService.CreateVitals(vitalSign);
+            var res = _patientService.CreateVitals(createVitalSignDto);
             if (res == null)
             {
                 var errors = new
@@ -63,8 +63,8 @@ namespace PatientRecords.Api.Controllers
             return Ok(data);
         }
 
-        [HttpPost(Name = "update")]
-        public async Task<IActionResult> UpdateVitals(PatientRecords.Core.models.VitalSign vitalSign)
+        [HttpPost("update")]
+        public async Task<IActionResult> UpdateVitals(PatientRecords.Core.Dtos.VitalSignDto vitalSignDto)
         {
             if (!ModelState.IsValid)
             {
@@ -76,7 +76,7 @@ namespace PatientRecords.Api.Controllers
                 };
                 return BadRequest(errors);
             }
-            var res = _patientService.UpdateVitals(vitalSign);
+            var res = _patientService.UpdateVitals(vitalSignDto);
             if (res == null)
             {
                 var errors = new
@@ -95,8 +95,8 @@ namespace PatientRecords.Api.Controllers
             return Ok(data);
         }
 
-        [HttpPost(Name = "Delete")]
-        public async Task<IActionResult> DeleteVitals(PatientRecords.Core.models.VitalSign vitalSign)
+        [HttpPost("Delete")]
+        public async Task<IActionResult> DeleteVitals(PatientRecords.Core.Dtos.VitalSignDto vitalSignDto)
         {
             if (!ModelState.IsValid)
             {
@@ -108,8 +108,8 @@ namespace PatientRecords.Api.Controllers
                 };
                 return BadRequest(errors);
             }
-            vitalSign.IsDeleted = 1;
-            var res = _patientService.UpdateVitals(vitalSign);
+            vitalSignDto.IsDeleted = 1;
+            var res = _patientService.UpdateVitals(vitalSignDto);
             if (res == null)
             {
                 var errors = new
@@ -128,7 +128,7 @@ namespace PatientRecords.Api.Controllers
             return Ok(data);
         }
 
-        [HttpPost("Get/{id}")]
+        [HttpGet("Get/{id}")]
         public async Task<IActionResult> GetSingleVitals([FromRoute] string Id)
         {
             if (string.IsNullOrEmpty(Id))
